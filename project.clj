@@ -1,5 +1,5 @@
 (defproject gift-list "0.0.1"
-  :dependencies [[org.clojure/clojure "1.4.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [ring/ring-jetty-adapter "1.1.0"]
                  [compojure "1.1.5"]
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
@@ -11,7 +11,7 @@
 
   :min-lein-version "2.0.0"
   :hooks [leiningen.cljsbuild]
-  :plugins [[lein-cljsbuild "0.3.0"]]
+  :plugins [[lein-cljsbuild "0.2.7"]]
   :cljsbuild  {:builds
                [{:source-paths ["src"]
                  :compiler {:pretty-print true
