@@ -10,6 +10,7 @@
                  [crate "0.2.4"]]
 
   :min-lein-version "2.0.0"
+  :hooks [leiningen.cljsbuild]
   :plugins [[lein-cljsbuild "0.3.0"]]
   :cljsbuild  {:builds
                [{:source-paths ["src"]
