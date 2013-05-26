@@ -43,7 +43,7 @@
                                                          (button "Tee varaus" #(shoreleave/rpc (reserve gift-id) [success]
                                                                                                (if success
                                                                                                  (render-gift parent gift-id [:span.green-text "Kiitos varauksesta!"])
-                                                                                                 (render-gift parent gift-id [:span.red-text ] "Joku muu ehti juuri varata tämän lahjan ennen sinua! Varauksesi ei siis onnistunut."))))
+                                                                                                 (render-gift parent gift-id [:span.red-text "Joku muu ehti juuri varata tämän lahjan ennen sinua! Varauksesi ei siis onnistunut."] ))))
                                                          (disabled-button "Tee varaus"))]
                                                       [:div.message message]]))))
 
