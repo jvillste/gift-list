@@ -15,7 +15,7 @@
                     (.set goog.net.cookies (:name session-cookie) (:value session-cookie) -1)
                     (set! (.-location js/window) "list"))))
 
-(defn run []
+(defn ^:export run []
   (shoreleave/rpc (question)
                   [question]
                   (domina/append! (.-body js/document) (crate/html [:div#contents

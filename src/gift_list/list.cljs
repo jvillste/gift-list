@@ -20,9 +20,6 @@
 (defn disabled-button [label]
   (crate/html [:a.button.disabled-button {:href "javascript:void(0)"} label]))
 
-(defn colored-text [color text]
-  [:span {:style (str "color:" color)} text])
-
 (defn render-gift [parent gift-id message]
   (shoreleave/rpc (gift gift-id)
                   [{:keys [reserved max description]}]
@@ -32,21 +29,21 @@
                                                       [:div.spacer]
                                                       [:div.reservation
                                                        [:div.status  "varattu: " reserved " " (let [free (- max reserved)
-                                                                                                      color (if (= 0 free)
-                                                                                                              "red"
-                                                                                                              "black")]
-                                                                                                  (colored-text color (str "vapaana: " free)))]
+                                                                                                    class (if (= 0 free)
+                                                                                                            "red-text"
+                                                                                                            "regular-text")]
+                                                                                                [:span {:class class}  (str "vapaana: " free)])]
 
                                                        (if (> reserved 0)
                                                          (button "Peru varaus" #(shoreleave/rpc (release gift-id)
                                                                                                 [_]
-                                                                                                (render-gift parent gift-id (colored-text "green" "Varaus peruttu." ))))
+                                                                                                (render-gift parent gift-id [:span.green-text "Varaus peruttu."])))
                                                          (disabled-button "Peru varaus"))
                                                        (if (< reserved max)
                                                          (button "Tee varaus" #(shoreleave/rpc (reserve gift-id) [success]
                                                                                                (if success
-                                                                                                 (render-gift parent gift-id (colored-text "green" "Kiitos varauksesta!" ))
-                                                                                                 (render-gift parent gift-id (colored-text "red" "Joku muu ehti juuri varata tämän lahjan ennen sinua! Varauksesi ei siis onnistunut.")))))
+                                                                                                 (render-gift parent gift-id [:span.green-text "Kiitos varauksesta!"])
+                                                                                                 (render-gift parent gift-id [:span.red-text ] "Joku muu ehti juuri varata tämän lahjan ennen sinua! Varauksesi ei siis onnistunut."))))
                                                          (disabled-button "Tee varaus"))]
                                                       [:div.message message]]))))
 
@@ -67,5 +64,5 @@
                   [gifts]
                   (show-list gifts)))
 
-(defn run []
+(defn ^:export run []
   (fetch-list))

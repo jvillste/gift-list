@@ -7,4 +7,7 @@
      (data/reset (read-string (slurp file-name))))
   ([uri]
      (data/connect-to-db uri)
+     (data/reset data/defaults))
+  ([]
+     (data/connect-to-db)
      (data/reset data/defaults)))

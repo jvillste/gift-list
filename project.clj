@@ -15,5 +15,5 @@
                [{:source-paths ["src"]
                  :compiler {:pretty-print true
                             :output-to "resources/public/js/cljs.js"
-                            :optimizations :whitespace}
+                            :optimizations :advanced}
                  :jar true}]})
