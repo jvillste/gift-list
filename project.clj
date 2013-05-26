@@ -13,8 +13,8 @@
   :hooks [leiningen.cljsbuild]
   :plugins [[lein-cljsbuild "0.2.7"]]
   :cljsbuild  {:builds
-               [{:source-paths ["src"]
+               [{:source-path "src"
                  :compiler {:pretty-print true
                             :output-to "resources/public/js/cljs.js"
-                            :optimizations :whitespace}
+                            :optimizations :advanced}
                  :jar true}]})
