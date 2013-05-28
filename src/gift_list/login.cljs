@@ -1,10 +1,12 @@
 (ns gift-list.login
-  (:require-macros [shoreleave.remotes.macros :as shoreleave])
-  (:require [crate.core :as crate]
+  (:require shoreleave.remotes.http-rpc
+            [crate.core :as crate]
             [domina :as domina]
             [domina.events :as events]
-            goog.net.cookies
-            shoreleave.remotes.http_rpc))
+            goog.net.cookies)
+  (:require-macros [shoreleave.remotes.macros :as shoreleave]))
+
+
 
 (defn check-password [password]
   (shoreleave/rpc (get-session-cookie password)

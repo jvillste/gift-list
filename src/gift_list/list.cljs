@@ -1,9 +1,9 @@
 (ns gift-list.list
-  (:require-macros [shoreleave.remotes.macros :as shoreleave])
   (:require [crate.core :as crate]
             [domina :as domina]
             [domina.events :as events]
-            shoreleave.remotes.http_rpc))
+            shoreleave.remotes.http-rpc)
+  (:require-macros [shoreleave.remotes.macros :as shoreleave]))
 
 (defn widget [renderer & params]
   (let [placeholder (crate/html [:div])]
