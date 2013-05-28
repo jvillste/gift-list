@@ -11,11 +11,11 @@
 
   :min-lein-version "2.0.0"
   :hooks [leiningen.cljsbuild]
-  :plugins [[lein-cljsbuild "0.3.2"  #_"0.2.7"]]
+  :plugins [[lein-cljsbuild #_"0.3.2"  "0.2.7"]]
   :main gift-list.web
   :cljsbuild  {:builds
-               [{:source-paths ["src"]
-                 ;; :source-path "src"
+               [{;; :source-paths ["src"]
+                  :source-path "src"
                  :compiler {:pretty-print true
                             :output-to "resources/public/js/cljs.js"
                             :optimizations :whitespace}
