@@ -48,11 +48,9 @@
              (handler/site)))
 
 (defn -main [port]
-  (data/connect-to-db (System/getenv "MONGOLAB_URI"))
+  (data/connect-to-db #_(System/getenv "MONGOLAB_URI"))
   (run-jetty #'app {:port (Integer/parseInt port)
                     :join? false}))
-
-
 
 (def server (atom nil))
 
@@ -64,5 +62,5 @@
                   (run-jetty #'app {:port 8080 :join? false}))))
 
 (comment
-  (run)
+(run)
   )

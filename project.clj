@@ -8,15 +8,14 @@
                  [domina "1.0.2-SNAPSHOT"]
                  [com.novemberain/monger "1.5.0"]
                  [crate "0.2.4"]]
-
   :min-lein-version "2.0.0"
   :hooks [leiningen.cljsbuild]
-  :plugins [[lein-cljsbuild "0.3.0" #_"0.3.2"  #_"0.2.7"]]
+  :plugins [[lein-cljsbuild "0.3.2" #_"0.2.7"]]
   :main gift-list.web
   :cljsbuild  {:builds
                [{ :source-paths ["src"]
                  ;; :source-path "src"
                  :compiler {:pretty-print true
                             :output-to "resources/public/js/cljs.js"
-                            :optimizations :whitespace}
+                            :optimizations #_:advanced :whitespace}
                  :jar true}]})

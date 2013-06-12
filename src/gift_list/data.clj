@@ -44,6 +44,7 @@
       (dissoc :_id)))
 
 (defn question []
+  (println "question")
   (get-setting :question))
 
 (defn gifts []
@@ -68,7 +69,6 @@
              0)
       (collection/update gifts-collection {:_id (ObjectId. gift-id)} {operators/$inc {:reserved -1}})))
   nil)
-
 
 (def defaults {:gifts [{:description (apply str (repeat 100 "bla "))
                         :reserved 0
