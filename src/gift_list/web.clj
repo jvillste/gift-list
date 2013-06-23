@@ -17,6 +17,7 @@
           [:head
            [:title title]
            (include-css "css/main.css")
+           (include-js "js/javascript-xpath.js")
            (include-js "js/cljs.js")]
           [:body {:onload on-load}]]))
 
