@@ -9,7 +9,7 @@
                  [com.novemberain/monger "1.5.0"]
                  [crate "0.2.4"]]
   :min-lein-version "2.0.0"
-  :hooks [leiningen.cljsbuild]
+  ;; :hooks [leiningen.cljsbuild]
   :plugins [[lein-cljsbuild "0.3.2"]]
   :main gift-list.web
   :cljsbuild  {:builds
