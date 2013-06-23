@@ -30,10 +30,7 @@
   (collection/remove gifts-collection)
   (collection/insert-batch gifts-collection (:gifts data))
   (collection/remove settings-collection)
-  (let [settings (update-in (:settings data)
-                            [:logo]
-                            read-file)]
-    (collection/insert settings-collection settings)))
+  (collection/insert settings-collection (:settings data)))
 
 (defn get-setting [key]
   (key (first (collection/find-maps settings-collection ))))
@@ -44,8 +41,10 @@
       (dissoc :_id)))
 
 (defn question []
-  (println "question")
   (get-setting :question))
+
+(defn logo []
+  (get-setting :logo))
 
 (defn gifts []
   (->> (collection/find-maps gifts-collection)
@@ -76,7 +75,7 @@
                        {:description (apply str (repeat 130 "bla "))
                         :reserved 0
                         :max 3}]
-               :settings {:logo "resources/public/images/logo.jpg"
+               :settings {:logo "images/logo.jpg"
                           :password "foo"
                           :question "Give me foo"
                           :session-key "123jlk12j3"}})

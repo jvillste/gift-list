@@ -52,12 +52,14 @@
   (widget render-gift gift-id ""))
 
 (defn show-list [gifts]
-  (domina/append! (.-body js/document) (crate/html [:div#contents
-                                                    [:img {:src "logo"}]
-                                                    [:div#gift-list]] ))
-  (let [gift-list (domina/by-id "gift-list")]
-    (doseq [gift gifts]
-      (domina/append! gift-list (gift-widget (:id gift))))))
+  (shoreleave/rpc (logo)
+                  [logo]
+                  (domina/append! (.-body js/document) (crate/html [:div#contents
+                                                                    [:img {:src logo}]
+                                                                    [:div#gift-list]] ))
+                  (let [gift-list (domina/by-id "gift-list")]
+                    (doseq [gift gifts]
+                      (domina/append! gift-list (gift-widget (:id gift)))))))
 
 (defn fetch-list []
   (shoreleave/rpc (gifts)

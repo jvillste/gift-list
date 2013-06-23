@@ -15,6 +15,7 @@
 
 (define-remotes
   data/question []
+  data/logo []
   data/gifts []
   data/gift [gift-id]
   data/reserve [gift-id]

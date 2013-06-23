@@ -32,13 +32,7 @@
 (defn login-page []
   (page-body "Lahjalista" "gift_list.login.run();"))
 
-(defn logo []
-  {:status 200
-   :headers {"Content-Type" "image/jpeg"}
-   :body (io/input-stream (data/get-setting :logo))})
-
 (defroutes handler
-  (GET "/logo" [] (logo))
   (GET "/" [] (login-page))
   (GET "/list" {cookies :cookies} (require-session cookies list-page))
   (route/files "/" {:root "resources/public"})
@@ -63,5 +57,5 @@
                   (run-jetty #'app {:port 8080 :join? false}))))
 
 (comment
-  (run)
+(run)
   )

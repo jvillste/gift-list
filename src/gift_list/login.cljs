@@ -16,13 +16,16 @@
                     (set! (.-location js/window) "list"))))
 
 
+
 (defn ^:export run []
   (shoreleave/rpc (question)
                   [question]
-                  (domina/append! (.-body js/document) (crate/html [:div#contents
-                                                                    [:img {:src "logo"}]
-                                                                    [:div.question question]
-                                                                    [:input#password {:type "text"}] [:span#message.green-text ""]]))
-                  (let [password-editor (domina/by-id "password")]
-                    (events/listen! password-editor
-                                    :input  #(check-password (domina/value (domina/by-id "password")))))))
+                  (shoreleave/rpc (logo)
+                                  [logo]
+                                  (domina/append! (.-body js/document) (crate/html [:div#contents
+                                                                                    [:img {:src logo}]
+                                                                                    [:div.question question]
+                                                                                    [:input#password {:type "text"}] [:span#message.green-text ""]]))
+                                  (let [password-editor (domina/by-id "password")]
+                                    (events/listen! password-editor
+                                                    :input  #(check-password (domina/value (domina/by-id "password"))))))))
