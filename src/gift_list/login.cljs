@@ -28,4 +28,4 @@
                                                                                     [:input#password {:type "text"}] [:span#message.green-text ""]]))
                                   (let [password-editor (domina/by-id "password")]
                                     (events/listen! password-editor
-                                                    :input  #(check-password (domina/value (domina/by-id "password"))))))))
+                                                    :keyup #(check-password (domina/value (domina/by-id "password"))))))))
