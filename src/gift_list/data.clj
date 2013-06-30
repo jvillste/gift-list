@@ -26,18 +26,13 @@
       (.read input output))
     output))
 
-(defn reset [data]
-  (collection/remove gifts-collection)
-  (collection/insert-batch gifts-collection (:gifts data))
-  (collection/remove settings-collection)
-  (collection/insert settings-collection (:settings data)))
 
 (defn get-setting [key]
   (key (first (collection/find-maps settings-collection ))))
 
 (defn gift-to-dto [gift]
   (-> gift
-      (assoc :id (.toString (:_id gift)))
+      (assoc :id (:_id gift))
       (dissoc :_id)))
 
 (defn question []
@@ -51,7 +46,7 @@
        (map gift-to-dto)))
 
 (defn gift [id]
-  (-> (collection/find-map-by-id gifts-collection (ObjectId. id))
+  (-> (collection/find-map-by-id gifts-collection id)
       gift-to-dto))
 
 (defn reserve [gift-id]
@@ -59,20 +54,31 @@
     (if (= (:reserved gift)
            (:max gift))
       false
-      (do (collection/update gifts-collection {:_id (ObjectId. gift-id)} {operators/$inc {:reserved 1}})
+      (do (collection/update gifts-collection {:_id gift-id} {operators/$inc {:reserved 1}})
           true))))
 
 (defn release [gift-id]
   (let [gift (gift gift-id)]
     (when (> (:reserved gift)
              0)
-      (collection/update gifts-collection {:_id (ObjectId. gift-id)} {operators/$inc {:reserved -1}})))
+      (collection/update gifts-collection {:_id gift-id} {operators/$inc {:reserved -1}})))
   nil)
 
-(def defaults {:gifts [{:description (apply str (repeat 100 "bla "))
+(defn reset [data]
+  (collection/remove gifts-collection)
+  (doseq [index (range (count (:gifts data)))]
+    (if (gift )))
+  (collection/insert-batch gifts-collection (:gifts data))
+  (collection/remove settings-collection)
+  (collection/insert settings-collection (:settings data)))
+
+
+(def defaults {:gifts [{:_id 1
+                        :description (apply str (repeat 50 "bla "))
                         :reserved 0
                         :max 1}
-                       {:description (apply str (repeat 130 "bla "))
+                       {:_id 2
+                        :description (apply str (repeat 130 "bla "))
                         :reserved 0
                         :max 3}]
                :settings {:logo "images/logo.jpg"
