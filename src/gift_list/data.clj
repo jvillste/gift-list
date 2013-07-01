@@ -3,11 +3,11 @@
             [monger.collection :as collection]
             [monger.operators :as operators]
             [shoreleave.middleware.rpc :as rpc ]
-            [clojure.java.io :as io])
-  (:import org.bson.types.ObjectId))
+            [clojure.java.io :as io]))
 
 (def gifts-collection "gifts")
 (def settings-collection "settings")
+(def reservations-collection "reservations")
 
 (defn connect-to-db
   ([uri]
@@ -30,10 +30,16 @@
 (defn get-setting [key]
   (key (first (collection/find-maps settings-collection ))))
 
+(defn reserved [id]
+  (if-let [reservation (collection/find-map-by-id reservations-collection id)]
+    (:reserved reservation)
+    nil))
+
 (defn gift-to-dto [gift]
   (-> gift
       (assoc :id (:_id gift))
-      (dissoc :_id)))
+      (dissoc :_id)
+      (assoc :reserved (reserved (:_id gift)))))
 
 (defn question []
   (get-setting :question))
@@ -46,40 +52,48 @@
        (map gift-to-dto)))
 
 (defn gift [id]
-  (-> (collection/find-map-by-id gifts-collection id)
-      gift-to-dto))
+  (if-let [gift (collection/find-map-by-id gifts-collection id)]
+    (gift-to-dto gift)
+    nil))
 
 (defn reserve [gift-id]
   (let [gift (gift gift-id)]
-    (if (= (:reserved gift)
-           (:max gift))
-      false
-      (do (collection/update gifts-collection {:_id gift-id} {operators/$inc {:reserved 1}})
-          true))))
+    (when (< (:reserved gift)
+             (:max gift))
+      (collection/update reservations-collection gift-id {operators/$inc {:reserved 1}}))
+    nil))
 
 (defn release [gift-id]
   (let [gift (gift gift-id)]
     (when (> (:reserved gift)
              0)
-      (collection/update gifts-collection {:_id gift-id} {operators/$inc {:reserved -1}})))
+      (collection/update reservations-collection gift-id {operators/$inc {:reserved -1}})))
   nil)
 
 (defn reset [data]
   (collection/remove gifts-collection)
-  (doseq [index (range (count (:gifts data)))]
-    (if (gift )))
-  (collection/insert-batch gifts-collection (:gifts data))
+  (let [gifts (map-indexed (fn [index gift]
+                             (if (not (reserved (:_id gift)))
+                               (collection/insert reservations-collection {:_id (:_id gift) :reserved 0}))
+                             (assoc gift :index index))
+                           (:gifts data))]
+    (collection/insert-batch gifts-collection gifts))
+
+
+
   (collection/remove settings-collection)
   (collection/insert settings-collection (:settings data)))
 
+(defn reset-reservations []
+  (collection/remove reservations-collection)
+  (doseq [gift (gifts)]
+    (collection/insert reservations-collection {:_id (:id gift) :reserved 0})))
 
 (def defaults {:gifts [{:_id 1
                         :description (apply str (repeat 50 "bla "))
-                        :reserved 0
                         :max 1}
                        {:_id 2
                         :description (apply str (repeat 130 "bla "))
-                        :reserved 0
                         :max 3}]
                :settings {:logo "images/logo.jpg"
                           :password "foo"
