@@ -22,22 +22,4 @@
   data/release [gfit-id]
   session/get-session-cookie [password])
 
-(comment
 
-  (rpc/defremote question []
-    (data/question))
-
-  (rpc/defremote gifts []
-    (data/gifts))
-
-  (rpc/defremote gift [gift-id]
-    (data/gift gift-id))
-
-  (rpc/defremote reserve [gift-id]
-    (data/reserve gift-id))
-
-  (rpc/defremote release [gift-id]
-    (data/release gift-id))
-
-  (rpc/defremote get-session-cookie [password]
-    (session/get-session-cookie password)))

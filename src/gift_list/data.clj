@@ -3,7 +3,8 @@
             [monger.collection :as collection]
             [monger.operators :as operators]
             [shoreleave.middleware.rpc :as rpc ]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [hiccup.core :as hiccup]))
 
 (def gifts-collection "gifts")
 (def settings-collection "settings")
@@ -39,7 +40,15 @@
   (-> gift
       (assoc :id (:_id gift))
       (dissoc :_id)
-      (assoc :reserved (reserved (:_id gift)))))
+      (assoc :reserved (reserved (:_id gift)))
+      (assoc :description (hiccup/html (if (:image gift)
+                                         [:img.gift-image {:src (:image gift)}]
+                                         [:div])
+                                       (concat [[:div (:text gift) ]]
+                                               (if (:link gift)
+                                                 [[:br] [:a {:href (:link gift)} "Lisätietoja"]]
+                                                 [[:div]]))
+                                       [:div {:style "clear: both;"}]))))
 
 (defn question []
   (get-setting :question))
@@ -49,7 +58,8 @@
 
 (defn gifts []
   (->> (collection/find-maps gifts-collection)
-       (map gift-to-dto)))
+       (map gift-to-dto)
+       (sort-by :index)))
 
 (defn gift [id]
   (if-let [gift (collection/find-map-by-id gifts-collection id)]
@@ -57,17 +67,19 @@
     nil))
 
 (defn reserve [gift-id]
+  (println "reserve " gift-id)
   (let [gift (gift gift-id)]
-    (when (< (:reserved gift)
-             (:max gift))
-      (collection/update reservations-collection gift-id {operators/$inc {:reserved 1}}))
-    nil))
+    (if (< (:reserved gift)
+           (:max gift))
+      (do (collection/update-by-id reservations-collection gift-id {operators/$inc {:reserved 1}})
+          true)
+      false)))
 
 (defn release [gift-id]
   (let [gift (gift gift-id)]
     (when (> (:reserved gift)
              0)
-      (collection/update reservations-collection gift-id {operators/$inc {:reserved -1}})))
+      (collection/update-by-id reservations-collection gift-id {operators/$inc {:reserved -1}})))
   nil)
 
 (defn reset [data]
@@ -89,12 +101,15 @@
   (doseq [gift (gifts)]
     (collection/insert reservations-collection {:_id (:id gift) :reserved 0})))
 
-(def defaults {:gifts [{:_id 1
-                        :description (apply str (repeat 50 "bla "))
+(def defaults {:gifts [{:_id 2
+                        :text (apply str (repeat 130 "bla "))
+                        :image "images/logo.jpg"
+                        :link "images/logo.jpg"
+                        :max 3}
+                       {:_id 1
+                        :text (apply str (repeat 50 "bla "))
                         :max 1}
-                       {:_id 2
-                        :description (apply str (repeat 130 "bla "))
-                        :max 3}]
+                       ]
                :settings {:logo "images/logo.jpg"
                           :password "foo"
                           :question "Give me foo"

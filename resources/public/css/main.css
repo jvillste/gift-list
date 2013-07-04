@@ -1,3 +1,4 @@
+
 #contents {
     width: 600px;
     margin: 0px auto;
@@ -68,4 +69,11 @@
 
 .regular-text {
     color: black;
+}
+
+
+.gift-image {
+    width: 200px;
+    float: left;
+    margin-right: 20px;
 }
