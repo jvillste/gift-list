@@ -4,6 +4,7 @@
             [shoreleave.middleware.rpc :as rpc ]
             [ring.util.response :as response]
             [clojure.java.io :as io]
+            [ring.middleware.logger :as logger]
             (gift-list [data :as data]
                        [session :as session]
                        api))
@@ -40,6 +41,7 @@
 
 (def app (-> handler
              (rpc/wrap-rpc)
+             (logger/wrap-with-plaintext-logger)
              (handler/site)))
 
 (defn -main [port]

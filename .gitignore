@@ -8,4 +8,5 @@
 cljs.js
 /resources/public/site
 /site-settings
+/logs
 
