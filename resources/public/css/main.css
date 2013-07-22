@@ -1,4 +1,10 @@
 
+@font-face
+{
+font-family: canterbury;
+src: url('/site/Canterbury.ttf')     
+}
+
 #contents {
     width: 600px;
     margin: 0px auto;
@@ -6,7 +12,8 @@
 }
 
 .question {
-    font-size: 30px;
+    font-family: canterbury;
+    font-size: 22px;
 }
 
 .gift {

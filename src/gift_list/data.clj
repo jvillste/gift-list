@@ -50,12 +50,6 @@
                                                  [[:div]]))
                                        [:div {:style "clear: both;"}]))))
 
-(defn question []
-  (get-setting :question))
-
-(defn logo []
-  (get-setting :logo))
-
 (defn gifts []
   (->> (collection/find-maps gifts-collection)
        (map gift-to-dto)
@@ -113,4 +107,6 @@
                :settings {:logo "images/logo.jpg"
                           :password "foo"
                           :question "Give me foo"
+                          :closing-message nil
+                          :list-message "This is a gift list example"
                           :session-key "123jlk12j3"}})

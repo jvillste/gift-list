@@ -51,20 +51,12 @@
 (defn gift-widget [gift-id]
   (widget render-gift gift-id ""))
 
-(defn show-list [gifts]
-  (shoreleave/rpc (logo)
-                  [logo]
-                  (domina/append! (.-body js/document) (crate/html [:div#contents
-                                                                    [:img {:src logo}]
-                                                                    [:div#gift-list]] ))
-                  (let [gift-list (domina/by-id "gift-list")]
-                    (doseq [gift gifts]
-                      (domina/append! gift-list (gift-widget (:id gift)))))))
-
-(defn fetch-list []
-  (shoreleave/rpc (gifts)
-                  [gifts]
-                  (show-list gifts)))
-
-(defn ^:export run []
-  (fetch-list))
+(defn ^:export run [model]
+  (let [{:keys [gifts logo message]} (js->clj model :keywordize-keys true)]
+    (domina/append! (.-body js/document) (crate/html [:div#contents
+                                                      [:img {:src logo}]
+                                                      [:div (crate/raw message)]
+                                                      [:div#gift-list]] ))
+    (let [gift-list (domina/by-id "gift-list")]
+      (doseq [gift gifts]
+        (domina/append! gift-list (gift-widget (:id gift)))))))

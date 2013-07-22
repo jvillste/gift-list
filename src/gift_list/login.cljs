@@ -6,6 +6,7 @@
             goog.net.cookies)
   (:require-macros [shoreleave.remotes.macros :as shoreleave]))
 
+
 (defn check-password [password]
   (shoreleave/rpc (get-session-cookie password)
                   [session-cookie]
@@ -17,15 +18,17 @@
 
 
 
-(defn ^:export run []
-  (shoreleave/rpc (question)
-                  [question]
-                  (shoreleave/rpc (logo)
-                                  [logo]
-                                  (domina/append! (.-body js/document) (crate/html [:div#contents
-                                                                                    [:img {:src logo}]
-                                                                                    [:div.question question]
-                                                                                    [:input#password {:type "text"}] [:span#message.green-text ""]]))
-                                  (let [password-editor (domina/by-id "password")]
-                                    (events/listen! password-editor
-                                                    :keyup #(check-password (domina/value (domina/by-id "password"))))))))
+(defn ^:export run [model]
+  (let [model (js->clj model :keywordize-keys true)]
+    (domina/append! (.-body js/document) (crate/html [:div#contents
+                                                      [:img {:src (:logo model)}]
+                                                      (if (:closing_message model)
+                                                        [:div.question (:closing_message model)]
+                                                        [:div
+                                                         [:span.question (:question model)]
+                                                         [:input#password {:type "text"}] [:span#message.green-text ""]])]))
+
+    (when (not (:closing_message model))
+      (let [password-editor (domina/by-id "password")]
+        (events/listen! password-editor
+                        :keyup #(check-password (domina/value (domina/by-id "password"))))))))

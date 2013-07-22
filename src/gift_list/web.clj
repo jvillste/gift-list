@@ -27,11 +27,44 @@
     (response)
     (response/redirect "/")))
 
+(defn clj->js [x]
+  (cond
+   (nil? x)
+   "null"
+
+   (string? x)
+   (str "'" (clojure.string/replace x "\n" "\\n") "'")
+
+   (number? x)
+   x
+
+   (map? x)
+   (str "{"
+        (->> x
+             (map (fn [e]
+                    (str (if (keyword? (key e))
+                           (clojure.string/replace (name (key e)) "-" "_")
+                           (key e))
+                         ": "
+                         (clj->js (val e)))))
+             (interpose "," )
+             (apply str))
+        "}")
+
+   (seq x)
+   (str "[" (apply str (interpose "," (vec (map clj->js x))) ) "]")))
+
 (defn list-page []
-  (page-body "Lahjalista" "gift_list.list.run();"))
+  (page-body "Lahjalista" (str "gift_list.list.run(" (clj->js {:gifts (data/gifts)
+                                                               :logo (data/get-setting :logo)
+                                                               :message (data/get-setting :list-message)
+                                                               }) ");" )))
 
 (defn login-page []
-  (page-body "Lahjalista" "gift_list.login.run();"))
+  (page-body "Lahjalista" (str "gift_list.login.run(" (clj->js {:question (data/get-setting :question)
+                                                                :logo (data/get-setting :logo)
+                                                                :closing-message (data/get-setting :closing-message)
+                                                                }) ");" )))
 
 (defroutes handler
   (GET "/" [] (login-page))
@@ -59,5 +92,5 @@
                   (run-jetty #'app {:port 8080 :join? false}))))
 
 (comment
-(run)
+  (run)
   )
